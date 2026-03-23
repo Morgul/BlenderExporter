@@ -13,6 +13,9 @@ The `dev` branch contains all fixes and is the recommended branch to use. It req
 - **Export material custom properties** - Material-level custom properties are now exported as `"metadata"`. From [alekop's commit](https://github.com/alekop/BlenderExporter/commit/cdd201ccd007e086e74fef6d408bf7277c062258).
 - **Fix mesh custom properties export** - Custom properties were read from the mesh data block (`bpyMesh.data`) instead of the object (`bpyMesh`), causing all user-set custom properties on mesh objects to be silently dropped.
 - **Fix JSON escaping in string properties** - String values containing double quotes (e.g. JSON stored as a custom property) are now properly escaped, preventing invalid JSON output.
+- **Support boolean custom properties** - Boolean custom properties were silently dropped during export. Added `bool` type handling (before `int`, since `bool` is a subclass of `int` in Python) to all custom property export paths.
+- **Default isPickable to True** - Changed mesh `isPickable` default from `False` to `True` to match the BabylonJS runtime default, so raycasting works out of the box.
+- **Fix backFaceCulling export** - Read `backFaceCulling` from Blender's native `use_backface_culling` material setting instead of an unused custom property. Always write it to the output since Blender defaults to double-sided while BabylonJS defaults to single-sided.
 
 ## Installation
 
