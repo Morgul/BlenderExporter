@@ -105,6 +105,7 @@ class BJSMaterial:
         if not isinstance(mat, BJSMaterial):
             bpyMaterial = mat
             self.name = bpyMaterial.name
+            self.backFaceCulling = bpyMaterial.use_backface_culling
             Logger.log('processing begun of material:  ' +  self.name, 2)
 
             if self.use_nodes:
@@ -267,7 +268,7 @@ class BJSMaterial:
         write_string(file_handler, 'customType', 'BABYLON.PBRMaterial' if self.isPBR else 'BABYLON.StandardMaterial')
 
         # properties from UI
-        if self.backFaceCulling != DEF_CULLING                                                       : write_bool(file_handler, 'backFaceCulling', self.backFaceCulling)
+        write_bool(file_handler, 'backFaceCulling', self.backFaceCulling)
         if self.twoSidedLighting != DEF_2_SIDED_LIGHTING                                             : write_bool(file_handler, 'twoSidedLighting',self.twoSidedLighting)
         if self.disableLighting != DEF_DISABLE_LIGHTING                                              : write_bool(file_handler, 'disableLighting', self.disableLighting)
         if self.maxSimultaneousLights != DEF_MAX_LIGHTS                                              : write_int(file_handler, 'maxSimultaneousLights', self.maxSimultaneousLights)
