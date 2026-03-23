@@ -81,7 +81,8 @@ class World:
             file_handler.write('"metadata":{')
             noComma = True
             for k, v in self.customProperties:
-                if type(v) == str: write_string(file_handler, k, v, noComma)
+                if type(v) == bool: write_bool(file_handler, k, v, noComma)
+                elif type(v) == str: write_string(file_handler, k, v, noComma)
                 elif type(v) == float: write_float(file_handler, k, v, noComma)
                 elif type(v) == int: write_int(file_handler, k, v, noComma)
                 else:

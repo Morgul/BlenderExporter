@@ -51,7 +51,8 @@ class Node(FCurveAnimatable):
         noComma = True
         for k, v in self.customProperties:
             print('writing custom prop:', k, v)
-            if type(v) == str: write_string(file_handler, k, v, noComma)
+            if type(v) == bool: write_bool(file_handler, k, v, noComma)
+            elif type(v) == str: write_string(file_handler, k, v, noComma)
             elif type(v) == float: write_float(file_handler, k, v, noComma)
             elif type(v) == int: write_int(file_handler, k, v, noComma)
             else:
