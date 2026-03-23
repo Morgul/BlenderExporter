@@ -222,7 +222,7 @@ class AbstractBJSNode:
         if bpyTypeReqd is not None:
             if not hasattr(value, 'bpyType') or value.bpyType != bpyTypeReqd:
                 return None
-            
+
         if value is not None: return value
         return self.defaults[socketName]
 

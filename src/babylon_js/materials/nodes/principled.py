@@ -22,10 +22,11 @@ class PrincipledBJSNode(AbstractBJSNode):
 
         self.mustBakeDiffuse = input.mustBake if isinstance(input, AbstractBJSNode) else False
         # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        subsurface = self.getDefault('Subsurface')
+        subsurface = self.getDefault('Subsurface Weight')
         # ignoring texture surfaces & must be greater than 0
-        if (subsurface > 0):
-            input = self.getDefault('Subsurface Color')
+        if (subsurface is not None and subsurface > 0):
+            # Blender 4.0+ removed 'Subsurface Color'; Base Color is used instead
+            input = self.getDefault('Base Color')
             tintColor = Color((input[0], input[1], input[2]))
             self.subSurfaceTintColor = tintColor
             self.subsurfaceTranslucencyIntensity = subsurface
@@ -37,7 +38,7 @@ class PrincipledBJSNode(AbstractBJSNode):
 
         self.mustBakeMetal = input.mustBake if isinstance(input, AbstractBJSNode) else False
        # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        input = self.findInput('Specular')
+        input = self.findInput('Specular IOR Level')
         defaultSpecular = self.findTexture(input, SPECULAR_TEX)
         if defaultSpecular is not None:
             self.specularColor = Color((defaultSpecular, defaultSpecular, defaultSpecular))
@@ -51,11 +52,11 @@ class PrincipledBJSNode(AbstractBJSNode):
 
         self.mustBakeRoughness = input.mustBake if isinstance(input, AbstractBJSNode) else False
         # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        input = self.findInput('Clearcoat')
+        input = self.findInput('Coat Weight')
         defaultClearCoatIntensity = self.findTexture(input, CLEARCOAT_TEX)
         self.mustBakeClearCoat = input.mustBake if isinstance(input, AbstractBJSNode) else False
 
-        input = self.findInput('Clearcoat Roughness')
+        input = self.findInput('Coat Roughness')
         defaultClearCoatRoughness = self.findTexture(input, CLEARCOAT_TEX)
         self.mustBakeClearCoat = input.mustBake if isinstance(input, AbstractBJSNode) else False
 
@@ -64,7 +65,7 @@ class PrincipledBJSNode(AbstractBJSNode):
             self.clearCoatIntensity = defaultClearCoatIntensity
             self.clearCoatRoughness = defaultClearCoatRoughness
         # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        input = self.findInput('Sheen')
+        input = self.findInput('Sheen Weight')
         defaultSheenIntensity = self.findTexture(input, SHEEN_TEX)
         self.mustBakeSheen = input.mustBake if isinstance(input, AbstractBJSNode) else False
 
@@ -73,13 +74,17 @@ class PrincipledBJSNode(AbstractBJSNode):
         self.mustBakeSheen = input.mustBake if isinstance(input, AbstractBJSNode) else False
 
         # only want scalars, when no texture on either input & intensity > 0
+        # Sheen Tint is RGBA in Blender 4.0+
         if SHEEN_TEX not in self.bjsTextures and defaultSheenIntensity is not None and defaultSheenIntensity > 0:
             self.sheenIntensity = defaultSheenIntensity
-            self.sheenColor = Color((defaultSheenColor, defaultSheenColor, defaultSheenColor))
+            if defaultSheenColor is not None and hasattr(defaultSheenColor, '__getitem__'):
+                self.sheenColor = Color((defaultSheenColor[0], defaultSheenColor[1], defaultSheenColor[2]))
+            elif defaultSheenColor is not None:
+                self.sheenColor = Color((defaultSheenColor, defaultSheenColor, defaultSheenColor))
         # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         input = self.getDefault('Anisotropic')
         # ignoring texture surfaces & must be greater than 0
-        if (input > 0):
+        if (input is not None and input > 0):
             self.anisotropicIntensity = input
         # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         input = self.findInput('IOR')
@@ -91,13 +96,13 @@ class PrincipledBJSNode(AbstractBJSNode):
        # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         self.emissiveIntensity = self.getDefault('Emission Strength')
 
-        input = self.findInput('Emission')
+        input = self.findInput('Emission Color')
         defaultEmissive = self.findTexture(input, EMMISIVE_TEX)
 
         # when defaultEmissive is None, a texture was found;
         # get color when returned by findTexture, or also when overloading
         if defaultEmissive is not None or overloadChannels:
-            defaultEmissive = self.getDefault('Emission')
+            defaultEmissive = self.getDefault('Emission Color')
             self.emissiveColor = Color((defaultEmissive[0], defaultEmissive[1], defaultEmissive[2]))
 
         self.mustBakeEmissive = input.mustBake if isinstance(input, AbstractBJSNode) else False
@@ -106,6 +111,6 @@ class PrincipledBJSNode(AbstractBJSNode):
         self.findTexture(input, BUMP_TEX)
         self.mustBakeNormal = input.mustBake if isinstance(input, AbstractBJSNode) else False
         # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        input = self.findInput('Clearcoat Normal')
+        input = self.findInput('Coat Normal')
         self.findTexture(input, CLEARCOAT_BUMP_TEX)
         self.mustBakeNormal = input.mustBake if isinstance(input, AbstractBJSNode) else False
