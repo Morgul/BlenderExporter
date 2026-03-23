@@ -48,7 +48,7 @@ class Mesh(FCurveAnimatable):
         Logger.log('processing begun of mesh:  ' + self.name)
         self.define_animations(bpyMesh, True, True, True)
 
-        self.customProps = bpyMesh.data.items()
+        self.customProps = bpyMesh.items()
         self.isVisible = bpyMesh.visible_get()
         self.isPickable = bpyMesh.data.isPickable
         self.isEnabled = not bpyMesh.data.disabled
