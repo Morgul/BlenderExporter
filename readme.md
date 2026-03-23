@@ -8,7 +8,7 @@ The `dev` branch contains all fixes and is the recommended branch to use. It req
 
 ### Fixes on `dev`
 
-- **Blender 4.0+ Principled BSDF compatibility** - Updated all socket name references to match the Blender 4.0 Principled BSDF v2 rework (Subsurface Weight, Specular IOR Level, Coat Weight, Emission Color, etc.). Based on [xuhuisheng's fix](https://github.com/xuhuisheng/BlenderExporter/commit/c5b06c73d213af9d6a6bd4511727aa9c7cc23d0c) for Blender 4.2, extended with full socket name mapping. Fixes [#74](https://github.com/BabylonJS/BlenderExporter/issues/74).
+- **Blender 4.0+ Principled BSDF compatibility** - Updated all socket name references to match the Blender 4.0 Principled BSDF v2 rework (Subsurface Weight, Specular IOR Level, Coat Weight, Emission Color, etc.). Fixes [#74](https://github.com/BabylonJS/BlenderExporter/issues/74).
 - **Export scene custom properties** - Scene-level custom properties are now exported as `"metadata"` in the .babylon file. From [alekop's PR #73](https://github.com/BabylonJS/BlenderExporter/pull/73).
 - **Export material custom properties** - Material-level custom properties are now exported as `"metadata"`. From [alekop's commit](https://github.com/alekop/BlenderExporter/commit/cdd201ccd007e086e74fef6d408bf7277c062258).
 - **Fix mesh custom properties export** - Custom properties were read from the mesh data block (`bpyMesh.data`) instead of the object (`bpyMesh`), causing all user-set custom properties on mesh objects to be silently dropped.
