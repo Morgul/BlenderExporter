@@ -70,6 +70,8 @@ class BJSMaterial:
 
         self.textureFullPathDir = exporter.textureFullPathDir
 
+        self.customProps = mat.items()
+
         # transfer from either the Blender or previous BJSMaterial
         self.overloadChannels = mat.overloadChannels
         self.backFaceCulling = mat.backFaceCulling
@@ -276,6 +278,9 @@ class BJSMaterial:
         if self.useParallax and format_f(self.parallaxScaleBias) != format_f(DEF_PARALLAX_SCALE_BIAS): write_float(file_handler, 'parallaxScaleBias', self.parallaxScaleBias)
         if self.useParallax and self.useParallaxOcclusion != DEF_PARALLAX_OCCLUSION                  : write_bool(file_handler, 'useParallaxOcclusion', self.useParallaxOcclusion)
 
+        if self.customProps:
+            self.writeCustomProperties(file_handler)
+
         # properties from UI which are PBR Only
         if self.isPBR:
             if self.environmentIntensity != DEF_ENV_INTENSITY             : write_float(file_handler, 'environmentIntensity', self.environmentIntensity)
@@ -480,6 +485,16 @@ class BJSMaterial:
                 Logger.warn('Metal / roughness texture detected, but no meaning outside of PBR, ignored', 3)
 
         if self.freeze != DEF_FREEZE : write_bool(file_handler,'checkReadyOnlyOnce', self.freeze)
+        file_handler.write('}')
+
+    def writeCustomProperties(self, file_handler):
+        file_handler.write(',"metadata": {')
+        noComma = True
+        for k, v in self.customProps:
+            if type(v) == str: write_string(file_handler, k, v, noComma)
+            elif type(v) == float: write_float(file_handler, k, v, FLOAT_PRECISION_DEFAULT, noComma)
+            elif type(v) == int: write_int(file_handler, k, v, noComma)
+            noComma = False
         file_handler.write('}')
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     @staticmethod
