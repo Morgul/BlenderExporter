@@ -327,7 +327,7 @@ def write_quaternion(file_handler, name, quaternion, precision = FLOAT_PRECISION
 def write_string(file_handler, name, string, noComma = False):
     if noComma == False:
         file_handler.write(',')
-    file_handler.write('"' + name + '":"' + string + '"')
+    file_handler.write('"' + name + '":"' + string.replace('\\', '\\\\').replace('"', '\\"') + '"')
 
 def write_float(file_handler, name, float, precision = FLOAT_PRECISION_DEFAULT, noComma = False):
     if noComma == False:
