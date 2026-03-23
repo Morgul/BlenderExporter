@@ -37,7 +37,7 @@ DEF_DISABLED = False
 DEF_CHECKCOLLISIONS = False
 DEF_RECEIVE_SHADOWS = False
 DEF_CAST_SHADOWS = False
-DEF_IS_PICKABLE = False
+DEF_IS_PICKABLE = True
 DEF_FREEZE_WORLD_MATRIX = False
 #===============================================================================
 class Mesh(FCurveAnimatable):
