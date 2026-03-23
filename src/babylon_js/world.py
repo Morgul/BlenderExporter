@@ -72,9 +72,24 @@ class World:
                     if 'are the same file' not in msg:
                         Logger.warn('Exception during copy:\n\t\t\t\t\t'+ msg, 4)
 
+        self.customProperties = scene.items()
+
         Logger.log('Python World class constructor completed')
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     def to_json_file(self, file_handler, exporter):
+        if len(self.customProperties) > 0:
+            file_handler.write('"metadata":{')
+            noComma = True
+            for k, v in self.customProperties:
+                if type(v) == str: write_string(file_handler, k, v, noComma)
+                elif type(v) == float: write_float(file_handler, k, v, noComma)
+                elif type(v) == int: write_int(file_handler, k, v, noComma)
+                else:
+                    Logger.warn('Non-scalar custom prop "' + k + '" ignored.', 2)
+                    continue
+                noComma = False
+            file_handler.write('},')
+
         write_bool(file_handler, 'autoClear', self.autoClear, True)
         write_color(file_handler, 'clearColor', self.clear_color)
         write_vector(file_handler, 'gravity', self.gravity)
